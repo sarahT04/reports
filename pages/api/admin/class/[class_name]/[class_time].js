@@ -8,12 +8,26 @@ async function getReportFromClassName(req, res) {
   const { class_name: className, class_time: classTime } = req.query;
   // Connect to coaches database
   const client = await connectToDatabase();
-  let coachDb = await client.db('coaches').collection('coach_data').find().toArray();
-  coachDb = coachDb.reduce((obj, item) => (obj[item._id] = item.name, obj), {})
+  // Find if class exists 
   let classesNameDb = await client.db('classes').collection('class_name').find().toArray();
   classesNameDb = classesNameDb.reduce((obj, item) => (obj[item.class_name] = item._id, obj), {})
-  const classDb = await client.db('reports').collection('report').find({ $and: [{ kelas: classesNameDb[className] }, { tanggal: classTime }] })
-    .sort({ _id: -1 }).toArray();
+  if (!classesNameDb[className]) {
+    client.close();
+    return res.status(404).json({ message: 'No query found' })
+  }
+  const classDb = await client.db('reports').collection('report').find({
+    $and: [
+      { kelas: classesNameDb[className] },
+      { tanggal: classTime }
+    ]
+  }).sort({ _id: -1 }).toArray();
+  if (classDb.length === 0) {
+    client.close();
+    return res.status(404).json({ message: 'No query found' })
+  }
+  // Prettyng the query
+  let coachDb = await client.db('coaches').collection('coach_data').find().toArray();
+  coachDb = coachDb.reduce((obj, item) => (obj[item._id] = item.name, obj), {})
   const result = classDb.map((db) => {
     const ph = { ...db };
     ph.kelas = className;

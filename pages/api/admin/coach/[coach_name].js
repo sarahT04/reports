@@ -10,11 +10,14 @@ async function getReportFromClassName(req, res) {
   // Connect to coaches database
   const client = await connectToDatabase();
   let coachDb = await client.db('coaches').collection('coach_data').find().toArray();
-  coachDb = coachDb.reduce((obj, item) => (obj[item._id] = item.name, obj), {})
+  coachDb = coachDb.reduce((obj, item) => (obj[item.name] = item._id, obj), {})
+  const classDb = await client.db('reports').collection('report').find({ 'coach_id': coachDb[coachName] }).limit(DB_LIMIT * 3)
+    .sort({ _id: -1 }).toArray();
+  if (classDb.length === 0) {
+    return res.status(404).json({ message: 'No query found' })
+  }
   let classesNameDb = await client.db('classes').collection('class_name').find().toArray();
   classesNameDb = classesNameDb.reduce((obj, item) => (obj[item._id] = item.class_name, obj), {})
-  const classDb = await client.db('reports').collection('report').find({}, { coach_id: coachName }).limit(DB_LIMIT * 3)
-    .sort({ _id: -1 }).toArray();
   const result = classDb.map((db) => {
     const ph = { ...db };
     ph.kelas = classesNameDb[db.kelas];

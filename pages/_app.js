@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Wrapper from '../components/Wrapper';
 import theme from '../components/theme'
+import { SessionProvider } from 'next-auth/react';
 
 function MyApp({ Component, pageProps }) {
 
@@ -14,13 +15,15 @@ function MyApp({ Component, pageProps }) {
     },
   }));
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <Wrapper>
-          <Component {...pageProps} />
-        </Wrapper>
-      </ChakraProvider>
-    </QueryClientProvider>
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <Wrapper>
+            <Component {...pageProps} />
+          </Wrapper>
+        </ChakraProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   )
 }
 

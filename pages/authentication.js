@@ -6,11 +6,12 @@ import {
   Text,
   InputGroup,
   InputRightElement,
+  Center,
 } from '@chakra-ui/react';
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from 'next/router'
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 // TODO: Prettier
 export default function Authorize() {
@@ -24,38 +25,49 @@ export default function Authorize() {
   const [seePassword, setSeePassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const { status } = useSession({
+    required: false
+  })
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await axios.post(
-      'api/auth/signup',
-      { username, password, name, secretKey },
-      {
-        headers: {
-          'Content-Type': 'application/json',
+    try {
+      const res = await axios.post(
+        'api/auth/signup',
+        { username, password, name, secretKey },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
         }
-      }
-    )
-    setMessage(res.data.message);
-    setLoading(false);
+      )
+      setMessage(res.data.message);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      setMessage(e.response.data.message);
+    }
   }
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await signIn('credentials', {
-      redirect: false,
-      username,
-      password
-    });
-    setLoading(false);
-    if (res.error) {
-      setMessage(res.error);
-    }
-    if (res.ok) {
-      setMessage("Logged in. Redirecting...")
-      router.replace('/')
+    try {
+      const res = await signIn('credentials', {
+        redirect: false,
+        username,
+        password
+      });
+      if (res.ok) {
+        setLoading(false);
+        setMessage("Logged in. Redirecting...");
+        router.push('/')
+      } else {
+        throw new Error('Something bad happened.');
+      }
+    } catch (e) {
+      setLoading(false);
+      setMessage(e.response.data.message);
     }
   }
 
@@ -89,7 +101,7 @@ export default function Authorize() {
               <Input type="text" value={secretKey} placeholder="Secret Key" onChange={(e) => { setSecretKey(e.target.value) }} />
             </>
           }
-          <Text>{message || loading ? "loading" : null}</Text>
+          <Center mb={4}>{message}</Center>
           <Button mb={4} type='submit' disabled={loading}>{isLogin ? "Login" : "Register"}</Button>
           <Button disabled={loading} onClick={() => { setIsLogin(!isLogin); }}>{!isLogin ? "Login" : "Register"} instead</Button>
         </form>
