@@ -11,9 +11,7 @@ export async function middleware(req) {
     return NextResponse.next();
   }
   if (!token) {
-    const url = req.nextUrl.clone()
-    url.pathname = '/authentication';
-    return NextResponse.rewrite(url);
+    return NextResponse.redirect(new URL('/authentication', req.url));
   }
   if (pathname == '/authentication') {
     if (!token) return NextResponse.next();
