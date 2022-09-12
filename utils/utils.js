@@ -16,7 +16,6 @@ export async function connectToDatabase() {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-
   return client;
 }
 
@@ -24,6 +23,4 @@ export function stringToObjectId(str) {
   return ObjectId(str);
 }
 
-export function toDate(str) {
-  return new Date(str).toLocaleString("en-US", { year: 'numeric', month: 'short', day: 'numeric', hour12: false, hour: '2-digit', minute: '2-digit' });
-}
+export const toDate = (str) => new Date(str).toLocaleString("en-US", { year: 'numeric', month: 'short', day: 'numeric', hour12: false, hour: '2-digit', minute: '2-digit' });

@@ -19,7 +19,6 @@ export default function AdminClassReport() {
         const { data } = await axios.get(
           `/api/admin/coach/${coachName}/`
         )
-        console.log(data.result);
         setClassDatas(data.result);
         setLoading(false);
         return data.result;
@@ -41,7 +40,7 @@ export default function AdminClassReport() {
         : error
           ? <Center>{message}</Center>
           : <>
-            {classDatas.map((data) => <ReportData key={data._id} {...data} />)}
+            {classDatas.map((data) => <ReportData key={data._id} {...data} coachName={data.coaches_data.name} kelas={data.class_name.class_name} />)}
             <Center>End of query</Center>
           </>
       }

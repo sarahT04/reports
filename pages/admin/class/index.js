@@ -2,6 +2,7 @@ import { Button, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toDate } from "../../../utils/frontend";
 
 export default function ClassReports() {
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export default function ClassReports() {
         : <Grid templateColumns='repeat(1, 1fr)' gap={4}>
           {classDatas.map((classData) => (
             <GridItem key={classData._id} h='10'>
-              <Button onClick={() => router.push(pathname + '/' + classData.kelas + '/' + classData._id)}>{classData.kelas}, {classData.tanggal}</Button>
+              <Button onClick={() => router.push(pathname + '/' + classData.kelas + '/' + classData._id)}>{classData.kelas}, {toDate(classData.tanggal)}</Button>
             </GridItem>
           ))}
         </Grid>}

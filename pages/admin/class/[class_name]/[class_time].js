@@ -39,7 +39,7 @@ export default function AdminClassReport() {
         </Flex>
         : error
           ? <Center>{message}</Center>
-          : <> {classDatas.map((data) => <ReportData key={data._id} {...data} />)}
+          : <> {classDatas.map((data) => <ReportData key={data._id} {...data} coachName={data.coaches_data.name} kelas={data.class_name.class_name} />)}
             <Center>End of query</Center>
           </>
       }

@@ -20,7 +20,7 @@ export default NextAuth({
         const { username } = credentials;
         // Connecting to database
         const client = await connectToDatabase();
-        const coachCollection = client.db('coaches').collection('coach_data');
+        const coachCollection = client.db('reports').collection('coaches');
         // Finding our username in database
         const user = await coachCollection.findOne({
           username,
@@ -38,7 +38,7 @@ export default NextAuth({
         // If invalid then throw error
         if (!isValid) {
           client.close();
-          throw new Error('Could not log you in!');
+          return { message: 'Wrong password' };
         }
         // But if everything passes, return our usename.
         client.close();

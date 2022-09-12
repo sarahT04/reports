@@ -6,23 +6,33 @@ async function getAllClass(req, res) {
   }
 
   const client = await connectToDatabase();
-  let classNameDb = await client.db('classes').collection('class_name').find().toArray();
-  classNameDb = classNameDb.reduce((obj, item) => (obj[item._id] = item.class_name, obj), {});
-  let classDb = await client.db('reports').collection('report').aggregate([{
-    "$group": {
-      "_id": "$tanggal",
-      "first": {
-        "$first": "$$ROOT"
+  let classDb = await client.db('reports').collection('report').aggregate([
+    {
+      $lookup: {
+        from: 'classes',
+        localField: 'kelas',
+        foreignField: '_id',
+        as: 'class_name'
+      }
+    },
+    {
+      $unwind: '$class_name'
+    },
+    {
+      "$group": {
+        "_id": "$tanggal",
+        "first": {
+          "$first": "$$ROOT"
+        }
+      }
+    }, {
+      "$project": {
+        "_id": '$first.tanggal',
+        "tanggal": "$first.tanggal",
+        "kelas": "$first.class_name.class_name",
       }
     }
-  }, {
-    "$project": {
-      "_id": 0,
-      "tanggal": "$first.tanggal",
-      "kelas": "$first.kelas",
-    }
-  }]).toArray();
-  classDb = classDb.map((datas) => ({ _id: datas.tanggal, kelas: classNameDb[datas.kelas], tanggal: toDate(datas.tanggal) })).reverse();
+  ]).toArray();  
   client.close();
   return res.status(201).json({ result: classDb })
 }

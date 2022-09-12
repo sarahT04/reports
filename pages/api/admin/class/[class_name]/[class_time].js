@@ -1,4 +1,4 @@
-import { connectToDatabase, toDate } from "../../../../../utils/utils";
+import { connectToDatabase } from "../../../../../utils/utils";
 
 async function getReportFromClassName(req, res) {
   // Makes sure it's post
@@ -6,37 +6,61 @@ async function getReportFromClassName(req, res) {
     return res.status(404);
   }
   const { class_name: className, class_time: classTime } = req.query;
-  // Connect to coaches database
+  // Connect to database
   const client = await connectToDatabase();
-  // Find if class exists 
-  let classesNameDb = await client.db('classes').collection('class_name').find().toArray();
-  classesNameDb = classesNameDb.reduce((obj, item) => (obj[item.class_name] = item._id, obj), {})
-  if (!classesNameDb[className]) {
-    client.close();
-    return res.status(404).json({ message: 'No query found' })
-  }
-  const classDb = await client.db('reports').collection('report').find({
-    $and: [
-      { kelas: classesNameDb[className] },
-      { tanggal: classTime }
-    ]
-  }).sort({ _id: -1 }).toArray();
+  // Find the appointed class name and class time
+  const classDb = await client.db('reports').collection('report').aggregate([
+    {
+      $lookup: {
+        from: 'classes',
+        localField: 'kelas',
+        foreignField: '_id',
+        as: 'class_name'
+      }
+    },
+    {
+      $lookup: {
+        from: 'coaches',
+        localField: 'coach_id',
+        foreignField: '_id',
+        as: 'coaches_data'
+      }
+    },
+    { $unwind: '$class_name' },
+    { $unwind: '$coaches_data' },
+    {
+      $match: {
+        $and: [
+          { 'class_name.class_name': className },
+          { tanggal: classTime }
+        ]
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        'class_name.class_name': 1,
+        'coaches_data.name': 1,
+        nama: 1,
+        tanggal: 1,
+        komentar: 1,
+        kelemahan: 1,
+        kekuatan: 1,
+        peningkatan: 1,
+      }
+    },
+    {
+      $sort: {
+        _id: -1
+      },
+    }
+  ]).toArray();
   if (classDb.length === 0) {
     client.close();
     return res.status(404).json({ message: 'No query found' })
   }
-  // Prettyng the query
-  let coachDb = await client.db('coaches').collection('coach_data').find().toArray();
-  coachDb = coachDb.reduce((obj, item) => (obj[item._id] = item.name, obj), {})
-  const result = classDb.map((db) => {
-    const ph = { ...db };
-    ph.kelas = className;
-    ph.tanggal = toDate(classTime);
-    ph.coachName = coachDb[ph.coach_id]
-    return ph;
-  })
   client.close();
-  return res.status(201).json({ result })
+  return res.status(201).json({ result: classDb })
 }
 
 export default getReportFromClassName;

@@ -9,24 +9,51 @@ async function getReportFromClassName(req, res) {
   const { coach_name: coachName } = req.query;
   // Connect to coaches database
   const client = await connectToDatabase();
-  let coachDb = await client.db('coaches').collection('coach_data').find().toArray();
-  coachDb = coachDb.reduce((obj, item) => (obj[item.name] = item._id, obj), {})
-  const classDb = await client.db('reports').collection('report').find({ 'coach_id': coachDb[coachName] }).limit(DB_LIMIT * 3)
-    .sort({ _id: -1 }).toArray();
-  if (classDb.length === 0) {
-    return res.status(404).json({ message: 'No query found' })
-  }
-  let classesNameDb = await client.db('classes').collection('class_name').find().toArray();
-  classesNameDb = classesNameDb.reduce((obj, item) => (obj[item._id] = item.class_name, obj), {})
-  const result = classDb.map((db) => {
-    const ph = { ...db };
-    ph.kelas = classesNameDb[db.kelas];
-    ph.tanggal = toDate(db.tanggal);
-    ph.coachName = coachDb[db.coach_id]
-    return ph;
-  })
+  const classDb = await client.db('reports').collection('report').aggregate([
+    {
+      $lookup: {
+        from: 'classes',
+        localField: 'kelas',
+        foreignField: '_id',
+        as: 'class_name'
+      }
+    },
+    {
+      $lookup: {
+        from: 'coaches',
+        localField: 'coach_id',
+        foreignField: '_id',
+        as: 'coaches_data'
+      }
+    },
+    { $unwind: '$class_name' },
+    { $unwind: '$coaches_data' },
+    {
+      $match: {
+        'coaches_data.name': coachName,
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        'class_name.class_name': 1,
+        'coaches_data.name': 1,
+        nama: 1,
+        tanggal: 1,
+        komentar: 1,
+        kelemahan: 1,
+        kekuatan: 1,
+        peningkatan: 1,
+      }
+    },
+    {
+      $sort: { _id: -1 },
+    },
+    { $limit: DB_LIMIT * 4 }
+  ]).toArray();
   client.close();
-  return res.status(201).json({ result })
+  console.log(classDb)
+  return res.status(201).json({ result: classDb })
 }
 
 export default getReportFromClassName;

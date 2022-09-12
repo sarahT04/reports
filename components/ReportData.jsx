@@ -1,4 +1,5 @@
 import { Flex, Heading, Text, Box } from "@chakra-ui/react/";
+import { toDate } from "../utils/frontend";
 
 export default function ReportData({ kelas, coachName, nama, tanggal, komentar, kelemahan, kekuatan, peningkatan }) {
     const others = [kelemahan, kekuatan, peningkatan];
@@ -7,7 +8,7 @@ export default function ReportData({ kelas, coachName, nama, tanggal, komentar, 
             <Flex justify={'space-between'}>
                 <Heading>{kelas}</Heading>
                 <Text>{coachName}</Text>
-                <Text>{tanggal}</Text>
+                <Text>{toDate(tanggal)}</Text>
             </Flex>
             <Text>{nama}</Text>
             <Text>Komentar: {komentar}</Text>

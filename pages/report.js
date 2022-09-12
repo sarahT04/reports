@@ -30,7 +30,7 @@ function checkIsEmptyString(str) {
 
 // TODO: Only prettier
 export default function CreateReport({ classes }) {
-  const coach_id = useContext(UserIdContext);
+  const coach_id = useContext(UserIdContext).userId;
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const { isOpen, onToggle } = useDisclosure();
@@ -109,8 +109,8 @@ export default function CreateReport({ classes }) {
 
 export async function getServerSideProps() {
   const client = await connectToDatabase();
-  const db = client.db("classes");
-  const classes = await db.collection('class_name').find().toArray();
+  const db = client.db("reports");
+  const classes = await db.collection('classes').find().toArray();
   client.close();
   return {
     props: {

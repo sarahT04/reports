@@ -18,8 +18,8 @@ export default function Home() {
           </Flex>
           : <>
             <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/report'); }}>Report</Button>
-            <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/see-report'); }}>See Reports</Button>
-            <Button h={14} mb={4} onClick={() => { signOut() }}>Logout</Button>
+            <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/reports'); }}>Lihat Reports</Button>
+            <Button h={14} mb={4} onClick={() => { signOut() }}>Keluar</Button>
             <Button h={14} isDisabled={!isAdmin} onClick={() => { setLoading(true); router.push('/admin'); }}>Admin</Button>
             </>
       }

@@ -10,17 +10,17 @@ async function signUpCoach(req, res) {
   let isAdmin = false;
   const data = req.body;
   const { username, password, name, secretKey } = data;
-  if (secretKey !== SECRET_KEY) {
-    return res.status(404).json({ message: 'Wrong Secret Key.' })
-  }
   if (secretKey === ADMIN_SECRET_KEY) {
     isAdmin = true;
   }
+  if (secretKey !== SECRET_KEY && secretKey !== ADMIN_SECRET_KEY) {
+    return res.status(404).json({ message: 'Wrong Secret Key.' })
+  }
   // Connect to coaches database
   const client = await connectToDatabase();
-  const db = client.db("coaches");
+  const db = client.db('reports')
   // Find the coach's username
-  const user = await db.collection('coach_data').findOne({ username });
+  const user = await db.collection('coaches').findOne({ username });
   // If it exists, can't signup
   if (user) {
     client.close();
@@ -28,7 +28,7 @@ async function signUpCoach(req, res) {
   }
   // If doesn't exist hash the password and insert to database
   const hashedPassword = await hashPassword(password);
-  const result = await db.collection('coach_data').insertOne({
+  const result = await db.collection('coaches').insertOne({
     name,
     username,
     password: hashedPassword,

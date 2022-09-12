@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const isAdmin = token !== null && token.isAdmin;
+  const isAdmin = token !== null && token.user.isAdmin;
   if (pathname.startsWith('/_next') || pathname === '/favicon.ico' || pathname.startsWith('/api')) {
     return NextResponse.next();
   }

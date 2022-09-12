@@ -6,7 +6,7 @@ async function getAllClass(req, res) {
   }
 
   const client = await connectToDatabase();
-  const result = await client.db('coaches').collection('coach_data').find().toArray();
+  const result = await client.db('reports').collection('coaches').find().toArray();
   client.close();
   return res.status(201).json({ result })
 }

@@ -25,9 +25,6 @@ export default function Authorize() {
   const [seePassword, setSeePassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { status } = useSession({
-    required: false
-  })
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -41,9 +38,11 @@ export default function Authorize() {
           }
         }
       )
+      console.log('not error', res)
       setMessage(res.data.message);
       setLoading(false);
     } catch (e) {
+      console.log(e)
       setLoading(false);
       setMessage(e.response.data.message);
     }
@@ -66,8 +65,8 @@ export default function Authorize() {
         throw new Error('Something bad happened.');
       }
     } catch (e) {
+      setMessage(e.message);
       setLoading(false);
-      setMessage(e.response.data.message);
     }
   }
 
