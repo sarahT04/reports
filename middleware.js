@@ -10,14 +10,14 @@ export async function middleware(req) {
   if (pathname.startsWith('/_next') || pathname === '/favicon.ico' || pathname.startsWith('/api')) {
     return NextResponse.next();
   }
-  if (!token) {
-    return NextResponse.redirect(new URL('/authentication', req.url));
-  }
   if (pathname == '/authentication') {
     if (!token) return NextResponse.next();
     if (token) {
       return NextResponse.redirect(new URL('/', req.url));
     }
+  }
+  if (!token) {
+    return NextResponse.redirect(new URL('/authentication', req.url));
   }
   if (pathname.startsWith('/admin') && !isAdmin) {
     return NextResponse.redirect(new URL('/', req.url));
