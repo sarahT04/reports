@@ -3,7 +3,6 @@ import {
   FormLabel,
   Input,
   Button,
-  Text,
   InputGroup,
   InputRightElement,
   Center,
@@ -11,7 +10,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from 'next/router'
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 // TODO: Prettier
 export default function Authorize() {
@@ -58,9 +57,8 @@ export default function Authorize() {
         password
       });
       if (res.ok) {
-        setLoading(false);
         setMessage("Logged in. Redirecting...");
-        router.push('/')
+        router.push('/report')
       } else {
         throw new Error('Something bad happened.');
       }
