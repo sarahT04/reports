@@ -100,9 +100,9 @@ export default function CreateReport({ classes }) {
           <Textarea value={peningkatan} onChange={(e) => setPeningkatan(e.target.value)}></Textarea>
         </FormControl>
       </Collapse>
-      <Button type="submit" colorScheme='teal' rightIcon={<CheckIcon />} isLoading={loading} loadingText='Submitting'>Submit</Button>
+      <Button type="submit" colorScheme='teal' rightIcon={<CheckIcon />} isLoading={loading} loadingText='Submitting'>Kirim</Button>
       <Text mb={4}>{message}</Text>
-      <Button onClick={resetHandler} variant='outline' rightIcon={<EditIcon />} colorScheme='red' isDisabled={loading} >Bikin Baru</Button>
+      <Button onClick={resetHandler} variant='outline' rightIcon={<EditIcon />} colorScheme='red' isDisabled={loading} >Buat Baru</Button>
     </form>
   )
 }

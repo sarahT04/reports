@@ -1,34 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Student Reports Website
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## https://reports-saraht04.vercel.app/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+# Overview dan Purpose
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Website ini dibangun sebagai latihan self-project Sarah. Website ini mencakup user authentication, admin configuration, route protection, dan data-sharing.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Tujuan dari website ini adalah untuk membaca laporan yang telah dibuat, serta membuat laporan setiap murid pada kelas. 
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+# Technology yang Dipakai
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+1. Next.js for website framework
+2. ChakraUI for most of the website UI.
+3. MongoDB for the database.
+4. Vercel for website deployment.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# Detail Website
+
+[[LINK]](https://reports-saraht04.vercel.app/)
+
+Landing page dari website ini ada 2, yaitu ‘/authentication’ pada user yang belum login (user harus login terlebih dahulu untuk bisa menggunakan website) dan ‘/’ dimana ada 4 tombol tersedia. 
+
+User yang merupakan seorang admin dapat mengakses bagian admin dari website dan melakukan konfigurasi admin serta melakukan semua hal user biasa dapat lakukan.
+
+User yang bukan merupakan seorang admin dapat menulis laporan, dan membaca laporan yang telah dibuat.
+
+Dalam menulis laporan, ada 4 form-field yang harus diisi, nama kelas (sudah ditambahkan terlebih dahulu), tanggal dan jam kelas, nama murid, serta komentar yang mereka punyai. 3 form-field optional adalah untuk menulis kelemahan, kekuatan, dan apa yang bisa ditingkatkan oleh murid.
+
+Dalam melihat laporan, user bisa melihat laporan yang telah mereka buat. Fitur ‘Load More’ tersedia pada laporan.
+
+Dalam website admin, admin dapat melihat laporan dari informasi kelas atau dari nama coach. Admin juga dapat menambah nama kelas.
+
+
+# Cara Menggunakan
+
+Register terlebih dahulu pada website. Secret Key nya adalah: ‘ILOVECOACH7’ untuk user biasa dan ‘!!ADMIN123__’ untuk user admin.
+
+Atau dapat login menggunakan username: ‘sarah’ dengan password: ‘iliketurtles’
+
+Tekan tombol yang tersedia pada layar untuk membawa anda ke rute website tujuan.
+
+
+# Komentar
+
+UI masih agak kurang intuitif.
+/admin/class tidak tersortir.

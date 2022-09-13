@@ -17,8 +17,8 @@ export default function Home() {
             <Spinner />
           </Flex>
           : <>
-            <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/report'); }}>Report</Button>
-            <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/reports'); }}>Lihat Reports</Button>
+            <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/report'); }}>Laporan</Button>
+            <Button h={14} mb={4} onClick={() => { setLoading(true); router.push('/reports'); }}>Lihat Laporan</Button>
             <Button h={14} mb={4} onClick={() => { signOut() }}>Keluar</Button>
             <Button h={14} isDisabled={!isAdmin} onClick={() => { setLoading(true); router.push('/admin'); }}>Admin</Button>
             </>

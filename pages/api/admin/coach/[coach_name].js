@@ -7,6 +7,7 @@ async function getReportFromClassName(req, res) {
     return res.status(404);
   }
   const { coach_name: coachName } = req.query;
+  let { report_id: reportId } = data;
   // Connect to coaches database
   const client = await connectToDatabase();
   const classDb = await client.db('reports').collection('report').aggregate([

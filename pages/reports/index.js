@@ -1,15 +1,48 @@
-import { Box, Button, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import axios from 'axios';
+import { Spinner, Button, Flex, Center } from '@chakra-ui/react'
+import { useContext } from 'react';
+import { useInfiniteQuery } from 'react-query';
+import { UserIdContext } from '../../components/Wrapper';
+import ReportData from '../../components/ReportData';
 
-export default function Reports() {
-  const router = useRouter();
+export default function SeeReport() {
+  const coach_id = useContext(UserIdContext).userId
+  const { data: reportsData, isLoading, isError, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(['reports-data'], async ({ pageParam = undefined }) => {
+    const { data } = await axios.post(
+      '/api/reports/',
+      { coach_id, report_id: pageParam },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+    return data.result
+  }, {
+    getNextPageParam: (lastPage) => {
+      if (lastPage.length !== 0) {
+        const data = lastPage[lastPage.length - 1]._id;
+        return data;
+      }
+      return undefined
+    }
+  });
   return (
-    <Box>
-      <Text mb={4}>Milik saya:</Text>
-      <Button mb={4} onClick={() => router.push('/reports/me')}>Milik saya</Button>
-      <Text mb={4}>Dibagikan dengan saya:</Text>
-      <Button mb={4} onClick={() => router.push('/reports/shared')}>Dibagikan dengan saya</Button>
-      {}
-    </Box>
+    <div>
+      {
+        isError
+          ? <Center>Sorry, an error occured.</Center>
+          : isLoading
+            ? <Flex justify="center" align="center">
+              <Spinner />
+            </Flex>
+            : <>
+              {reportsData.pages.map(page => (page.map((reportData) => <ReportData key={reportData._id} {...reportData} coachName={reportData.coaches_data.name} kelas={reportData.class_name.class_name}/>)))}
+              <Center>{hasNextPage ? null : 'Tidak ada data'}</Center>
+              <Button mt={4} isLoading={isLoading || isFetchingNextPage} isDisabled={!hasNextPage}
+                onClick={fetchNextPage}>{hasNextPage ? 'Lebih Banyak' : 'Akhir dari Data'}</Button>
+            </>
+      }
+    </div>
   )
 }

@@ -1,4 +1,4 @@
-import { connectToDatabase, toDate } from "../../../../utils/utils";
+import { connectToDatabase } from "../../../../utils/utils";
 
 async function getAllClass(req, res) {
   if (req.method !== 'GET') {
@@ -25,14 +25,20 @@ async function getAllClass(req, res) {
           "$first": "$$ROOT"
         }
       }
-    }, {
+    },
+    {
+      $sort: {
+        _id: -1
+      }
+    },
+    {
       "$project": {
         "_id": '$first.tanggal',
         "tanggal": "$first.tanggal",
         "kelas": "$first.class_name.class_name",
       }
     }
-  ]).toArray();  
+  ]).toArray();
   client.close();
   return res.status(201).json({ result: classDb })
 }

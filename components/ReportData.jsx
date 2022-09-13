@@ -1,19 +1,19 @@
-import { Flex, Heading, Text, Box } from "@chakra-ui/react/";
+import { Flex, Heading, Text, Box, Center } from "@chakra-ui/react/";
 import { toDate } from "../utils/frontend";
 
 export default function ReportData({ kelas, coachName, nama, tanggal, komentar, kelemahan, kekuatan, peningkatan }) {
     const others = [kelemahan, kekuatan, peningkatan];
     return (
-        <Box mb={4} border='1px' p={4} borderRadius={4}>
-            <Flex justify={'space-between'}>
-                <Heading>{kelas}</Heading>
-                <Text>{coachName}</Text>
+        <Box mb={4} boxShadow='sm' p='6' rounded='md' bg='gray.700'>
+            <Heading><Center>{kelas}</Center></Heading>
+            <Flex mb={2} justify='space-between' color='grey' fontSize='xs'>
+                <Text>oleh {coachName}</Text>
                 <Text>{toDate(tanggal)}</Text>
             </Flex>
-            <Text>{nama}</Text>
-            <Text>Komentar: {komentar}</Text>
+            <Text fontSize='xl'>{nama}</Text>
+            <Text color='gray.200'>Komentar: {komentar}</Text>
             {
-                others.map((other) => other === null ? null : <Text>{other}</Text>)
+                others.map((other) => other === null ? null : <Text color='gray.200'>{other}</Text>)
             }
         </Box>
     )

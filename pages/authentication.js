@@ -58,7 +58,7 @@ export default function Authorize() {
       });
       if (res.ok) {
         setMessage("Logged in. Redirecting...");
-        router.push('/report')
+        router.push('/')
       } else {
         throw new Error('Something bad happened.');
       }
@@ -92,15 +92,15 @@ export default function Authorize() {
           {isLogin
             ? null
             : <>
-              <FormLabel>Name:</FormLabel>
+              <FormLabel>Nama:</FormLabel>
               <Input type="text" value={name} placeholder="Name" onChange={(e) => { setName(e.target.value) }} />
-              <FormLabel>Secret Key:</FormLabel>
+              <FormLabel>Kunci Rahasia:</FormLabel>
               <Input type="text" value={secretKey} placeholder="Secret Key" onChange={(e) => { setSecretKey(e.target.value) }} />
             </>
           }
           <Center mb={4}>{message}</Center>
           <Button mb={4} type='submit' disabled={loading}>{isLogin ? "Login" : "Register"}</Button>
-          <Button disabled={loading} onClick={() => { setIsLogin(!isLogin); }}>{!isLogin ? "Login" : "Register"} instead</Button>
+          <Button disabled={loading} onClick={() => { setIsLogin(!isLogin); }}>Ganti menjadi {!isLogin ? "Login" : "Register"}</Button>
         </form>
       </FormControl>
     </div >

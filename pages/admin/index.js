@@ -11,8 +11,8 @@ export default function AdminIndex() {
   const { pathname } = router;
   return (
     <Box>
-      <Heading mb={4} size='md' as='h3'>See Report by:</Heading>
-      <Button mb={4} onClick={() => router.push(pathname + '/class/')}>Class</Button>
+      <Heading mb={4} size='md' as='h3'>Lihat Laporan dari:</Heading>
+      <Button mb={4} onClick={() => router.push(pathname + '/class/')}>Kelas</Button>
       <Button onClick={() => router.push(pathname + '/coach/')}>Coach</Button>
     </Box>
   )

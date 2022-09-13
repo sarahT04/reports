@@ -1,4 +1,4 @@
-import { Box, Flex, Spinner, Center } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Center, Select } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -39,10 +39,12 @@ export default function AdminClassReport() {
         </Flex>
         : error
           ? <Center>{message}</Center>
-          : <> {classDatas.map((data) => <ReportData key={data._id} {...data} coachName={data.coaches_data.name} kelas={data.class_name.class_name} />)}
-            <Center>End of query</Center>
+          : <>
+            {classDatas.map((data) => <ReportData key={data._id} {...data} coachName={data.coaches_data.name} kelas={data.class_name.class_name} />)}
+            <Center>Akhir dari Data</Center>
           </>
       }
     </Box>
   )
 }
+
