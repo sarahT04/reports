@@ -1,4 +1,5 @@
-import { connectToDatabase, stringToObjectId } from '../../../utils/utils';
+import { connectToDatabase, stringToObjectId } from "../../../utils/utils";
+
 
 async function postReportToDatabase(req, res) {
   // Makes sure it's post
@@ -7,13 +8,12 @@ async function postReportToDatabase(req, res) {
   }
   // Get body data
   const data = req.body;
-  const { kelas, tanggal, nama, komentar, kelemahan, kekuatan, peningkatan, coach_id } = data;
+  const { kelas, tanggal, komentar, coach_id } = data;
   // Connect to coaches database
   const client = await connectToDatabase();
   const reportDb = client.db('reports')
-  const result = await reportDb.collection('report').insertOne({
-    kelas: stringToObjectId(kelas), tanggal, nama, komentar,
-    kelemahan, kekuatan, peningkatan, coach_id: stringToObjectId(coach_id),
+  const result = await reportDb.collection('class_report').insertOne({
+    kelas: stringToObjectId(kelas), tanggal, komentar, coach_id: stringToObjectId(coach_id),
   });
   // If succesful
   if (result) {

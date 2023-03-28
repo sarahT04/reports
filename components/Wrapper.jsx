@@ -24,6 +24,7 @@ export default function Home({ children }) {
             }
         });
     }, [pathname === '/'])
+    
     return (
         <UserIdContext.Provider value={{ userId, isAdmin }}>
             {pathname !== '/authentication'

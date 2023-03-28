@@ -5,50 +5,43 @@
 ## https://reports-saraht04.vercel.app/
 
 
-# Overview dan Purpose
+# Overview and Purpose
 
-Website ini dibangun sebagai latihan self-project Sarah. Website ini mencakup user authentication, admin configuration, route protection, dan data-sharing.
+This website was built as a self-training project by Sarah. This website includes user authentication, admin configuration, infinity query, route protection and data sharing.
 
-Tujuan dari website ini adalah untuk membaca laporan yang telah dibuat, serta membuat laporan setiap murid pada kelas. 
-
-
-# Technology yang Dipakai
+The purpose of this website is to read reports that have been made, and to make reports for each student in the class.
 
 
+# Used stack/technologies
 
 1. Next.js for website framework
-2. ChakraUI for most of the website UI.
-3. MongoDB for the database.
-4. Vercel for website deployment.
+2. React-query for asynchronous state management.
+3. ChakraUI for the website UI.
+4. MongoDB for the database.
+5. Vercel for website deployment.
 
 
-# Detail Website
+# Website detail
 
 [[LINK]](https://reports-saraht04.vercel.app/)
 
-Landing page dari website ini ada 2, yaitu ‘/authentication’ pada user yang belum login (user harus login terlebih dahulu untuk bisa menggunakan website) dan ‘/’ dimana ada 4 tombol tersedia. 
+There are 2 landing pages for this website, namely '/authentication' for users who are not logged in (users must log in first to be able to use the website) and '/' where there are 4 buttons available.
 
-User yang merupakan seorang admin dapat mengakses bagian admin dari website dan melakukan konfigurasi admin serta melakukan semua hal user biasa dapat lakukan.
+A user who is an admin can access the admin section of the website and do admin configurations and do all the things a normal user can do.
 
-User yang bukan merupakan seorang admin dapat menulis laporan, dan membaca laporan yang telah dibuat.
+Users who are not admins can write reports and read reports that have been made.
 
-Dalam menulis laporan, ada 4 form-field yang harus diisi, nama kelas (sudah ditambahkan terlebih dahulu), tanggal dan jam kelas, nama murid, serta komentar yang mereka punyai. 3 form-field optional adalah untuk menulis kelemahan, kekuatan, dan apa yang bisa ditingkatkan oleh murid.
+In writing a report, there are 4 form fields that must be filled in, class name (already added beforehand), class date and time, student name, and any comments they have. The 3 optional form-fields are for writing the student's weaknesses, strengths, and what can be improved.
 
-Dalam melihat laporan, user bisa melihat laporan yang telah mereka buat. Fitur ‘Load More’ tersedia pada laporan.
+In viewing reports, users can see the reports they have created. The 'Load More' feature is available on reports.
 
-Dalam website admin, admin dapat melihat laporan dari informasi kelas atau dari nama coach. Admin juga dapat menambah nama kelas.
+On the admin website, admins can view reports from class information or from the coach name. Admin can also add class names.
 
+# How to use (as a user)
 
-# Cara Menggunakan
+Register first on the website. To be a normal user, insert ‘ILOVECOACH7’ for the secret key and ‘!!ADMIN123__’ for admin user.
 
-Register terlebih dahulu pada website. Secret Key nya adalah: ‘ILOVECOACH7’ untuk user biasa dan ‘!!ADMIN123__’ untuk user admin.
+Or you can login using username: ‘sarah’ with password: ‘iliketurtles’
 
-Atau dapat login menggunakan username: ‘sarah’ dengan password: ‘iliketurtles’
+Once logged in, read the buttons to direct you to the section you want.
 
-Tekan tombol yang tersedia pada layar untuk membawa anda ke rute website tujuan.
-
-
-# Komentar
-
-UI masih agak kurang intuitif.
-/admin/class tidak tersortir.

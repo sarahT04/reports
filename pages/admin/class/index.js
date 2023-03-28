@@ -1,38 +1,33 @@
-import { Button, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
-import axios from "axios";
+import { Button, Grid, GridItem } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { toDate } from "../../../utils/frontend";
+import { connectToDatabase } from "../../../utils/utils";
 
-export default function ClassReports() {
-  const [loading, setLoading] = useState(true);
-  const [classDatas, setClassDatas] = useState([]);
+export default function ClassReports({ classDatas }) {
   const router = useRouter();
-  const { pathname } = router;
-  useEffect(() => {
-    const getDatas = async () => {
-      const { data } = await axios.get(
-        '/api/admin/class'
-      )
-      setClassDatas(data.result);
-      setLoading(false);
-      return data.result;
-    }
-    getDatas();
-  }, [])
   return (
-    <div>
-      {loading
-        ? <Flex justify="center" align="center">
-          <Spinner />
-        </Flex>
-        : <Grid templateColumns='repeat(1, 1fr)' gap={4}>
-          {classDatas.map((classData) => (
+    <>
+      <Button mb={10} onClick={() => router.push('/admin/class/situation')}>Situation</Button>
+      <Grid templateColumns='repeat(1, 1fr)' gap={4}>
+        {classDatas.length === 0
+          ? null
+          : classDatas.map((classData) => (
             <GridItem key={classData._id} h='10'>
-              <Button onClick={() => router.push(pathname + '/' + classData.kelas + '/' + classData._id)}>{classData.kelas}, {toDate(classData.tanggal)}</Button>
+              <Button onClick={() => router.push('/admin/class/' + classData.class_name)}>{classData.class_name}</Button>
             </GridItem>
           ))}
-        </Grid>}
-    </div>
+      </Grid>
+    </>
   )
+}
+
+export async function getServerSideProps() {
+  const client = await connectToDatabase();
+  const db = client.db("reports");
+  const classes = await db.collection('classes').find().toArray();
+  client.close();
+  return {
+    props: {
+      classDatas: JSON.parse(JSON.stringify(classes)),
+    }
+  }
 }

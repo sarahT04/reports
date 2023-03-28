@@ -29,7 +29,7 @@ export default function Authorize() {
     setLoading(true);
     try {
       const res = await axios.post(
-        'api/auth/signup',
+        '/api/auth/signup',
         { username, password, name, secretKey },
         {
           headers: {
@@ -37,11 +37,9 @@ export default function Authorize() {
           }
         }
       )
-      console.log('not error', res)
-      setMessage(res.data.message);
       setLoading(false);
+      setMessage(res.data.message);
     } catch (e) {
-      console.log(e)
       setLoading(false);
       setMessage(e.response.data.message);
     }
@@ -59,9 +57,9 @@ export default function Authorize() {
       if (res.ok) {
         setMessage("Logged in. Redirecting...");
         router.push('/')
-      } else {
-        throw new Error('Something bad happened.');
+        return
       }
+      throw new Error(res.error);
     } catch (e) {
       setMessage(e.message);
       setLoading(false);
@@ -80,6 +78,7 @@ export default function Authorize() {
               pr='4.5rem'
               type={seePassword ? 'text' : 'password'}
               placeholder='Password'
+              autoComplete='off'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -92,15 +91,15 @@ export default function Authorize() {
           {isLogin
             ? null
             : <>
-              <FormLabel>Nama:</FormLabel>
+              <FormLabel>Name:</FormLabel>
               <Input type="text" value={name} placeholder="Name" onChange={(e) => { setName(e.target.value) }} />
-              <FormLabel>Kunci Rahasia:</FormLabel>
+              <FormLabel>Secret Key:</FormLabel>
               <Input type="text" value={secretKey} placeholder="Secret Key" onChange={(e) => { setSecretKey(e.target.value) }} />
             </>
           }
           <Center mb={4}>{message}</Center>
           <Button mb={4} type='submit' disabled={loading}>{isLogin ? "Login" : "Register"}</Button>
-          <Button disabled={loading} onClick={() => { setIsLogin(!isLogin); }}>Ganti menjadi {!isLogin ? "Login" : "Register"}</Button>
+          <Button disabled={loading} onClick={() => { setIsLogin(!isLogin); }}>Change to {!isLogin ? "Login" : "Register"}</Button>
         </form>
       </FormControl>
     </div >

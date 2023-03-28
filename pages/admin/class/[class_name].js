@@ -1,21 +1,21 @@
 import SeeReport from "../../../components/SeeReport";
 import { connectToDatabase } from "../../../utils/utils";
 
-export default function AdminClassReport({ coach_id }) {
+export default function AdminClassReport({ class_id }) {
   return (
-    <SeeReport coach_id={coach_id} apiType="students" />
+    <SeeReport class_id={class_id} apiType="classes" />
   )
 }
 
 export async function getServerSideProps(ctx) {
-  const { coach_name } = ctx.params
+  const { class_name } = ctx.params
   const client = await connectToDatabase();
   const db = client.db("reports");
-  const coachDb = await db.collection('coaches').find({ 'name': coach_name }).toArray();
+  const classDb = await db.collection('classes').find({ 'class_name': class_name }).toArray();
   client.close();
   return {
     props: {
-      coach_id: JSON.parse(JSON.stringify(coachDb[0]['_id'])),
+      class_id: JSON.parse(JSON.stringify(classDb[0]['_id'])),
     }
   }
 }

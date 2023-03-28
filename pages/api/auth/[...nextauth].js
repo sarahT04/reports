@@ -38,7 +38,7 @@ export default NextAuth({
         // If invalid then throw error
         if (!isValid) {
           client.close();
-          return { message: 'Wrong password' };
+          throw new Error('Wrong password');
         }
         // But if everything passes, return our usename.
         client.close();

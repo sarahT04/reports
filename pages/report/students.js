@@ -14,15 +14,8 @@ import {
 import axios from 'axios';
 import { CheckIcon, EditIcon } from '@chakra-ui/icons'
 import { useState, useContext } from 'react';
-import { UserIdContext } from '../components/Wrapper';
-import { connectToDatabase } from '../utils/utils';
-
-function getCurrentDate() {
-  let now = new Date();
-  now.setSeconds(0, 0);
-  now.setHours(now.getHours() + 7);
-  return now.toISOString().replace(/:00.000Z/, "");
-}
+import { UserIdContext } from '../../components/Wrapper';
+import { connectToDatabase } from '../../utils/utils';
 
 function checkIsEmptyString(str) {
   return str === '' ? null : str;
@@ -33,18 +26,17 @@ export default function CreateReport({ classes }) {
   const coach_id = useContext(UserIdContext).userId;
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const { isOpen, onToggle } = useDisclosure();
   const [kelas, setKelas] = useState(classes[0]._id);
-  const [tanggal, setTanggal] = useState(getCurrentDate());
+  const [tanggal, setTanggal] = useState('');
   const [nama, setNama] = useState('');
-  const [detailKelas, setDetailKelas] = useState('');
   const [komentar, setKomentar] = useState('');
   const [kelemahan, setKelemahan] = useState('');
   const [kekuatan, setKekuatan] = useState('');
   const [peningkatan, setPeningkatan] = useState('');
+  const { isOpen, onToggle } = useDisclosure();
 
   const resetHandler = () => {
-    const setFunctions = [setNama, setKomentar, setKelemahan, setKekuatan, setPeningkatan, setDetailKelas, setMessage];
+    const setFunctions = [setNama, setKomentar, setKelemahan, setKekuatan, setPeningkatan, setMessage];
     for (let fns of setFunctions) {
       fns('');
     }
@@ -58,7 +50,7 @@ export default function CreateReport({ classes }) {
     };
     setLoading(true);
     const res = await axios.post(
-      'api/report/',
+      '/api/report/student',
       values,
       {
         headers: {
@@ -73,7 +65,7 @@ export default function CreateReport({ classes }) {
   return (
     <form onSubmit={handleReportSubmit}>
       <FormControl isRequired isDisabled={loading}>
-        <FormLabel >Kelas:</FormLabel>
+        <FormLabel>Class:</FormLabel>
         <Flex mb={4}>
           <Select value={kelas} onChange={(e) => { setKelas(e.target.value) }}>
             {
@@ -82,27 +74,32 @@ export default function CreateReport({ classes }) {
           </Select>
           <Input type="datetime-local" value={tanggal} onChange={(e) => setTanggal(e.target.value)} />
         </Flex>
-        <FormLabel >Nama Murid:</FormLabel>
-        <Input value={nama} onChange={(e) => setNama(e.target.value)} mb='4' />
-        <FormLabel>Komentar:</FormLabel>
-        <Textarea value={komentar} onChange={(e) => setKomentar(e.target.value)} ></Textarea>
-        {/* <FormLabel>Detail Kelas:</FormLabel>
-        <Textarea value={detailKelas} onChange={(e) => setDetailKelas(e.target.value)} ></Textarea> */}
+        <FormLabel >Student Name:</FormLabel>
+        <Input value={nama} onChange={(e) => setNama(e.target.value)} mb='4'
+          placeholder="Student name"
+        />
+        <FormLabel>Comment:</FormLabel>
+        <Textarea value={komentar} placeholder="Give comment to your student here"
+          onChange={(e) => setKomentar(e.target.value)} ></Textarea>
       </FormControl>
-      <Checkbox isChecked={isOpen} onChange={onToggle} mb={4} isDisabled={loading}>Lebih Banyak</Checkbox>
+      <Checkbox isChecked={isOpen} onChange={onToggle} mb={4} isDisabled={loading}>Add More Comment</Checkbox>
       <Collapse in={isOpen} >
         <FormControl isDisabled={loading}>
-          <FormLabel>Kelemahan:</FormLabel>
-          <Textarea value={kelemahan} onChange={(e) => setKelemahan(e.target.value)}></Textarea>
-          <FormLabel>Kekuatan:</FormLabel>
-          <Textarea value={kekuatan} onChange={(e) => setKekuatan(e.target.value)}></Textarea>
-          <FormLabel>Yang Bisa Ditingkatkan:</FormLabel>
-          <Textarea value={peningkatan} onChange={(e) => setPeningkatan(e.target.value)}></Textarea>
+          <FormLabel>Weakness:</FormLabel>
+          <Textarea placeholder="What seems to be your student's weakness?"
+            value={kelemahan} onChange={(e) => setKelemahan(e.target.value)}></Textarea>
+          <FormLabel>Strength:</FormLabel>
+          <Textarea placeholder="What seems to be your student's strength?"
+            value={kekuatan} onChange={(e) => setKekuatan(e.target.value)}></Textarea>
+          <FormLabel>Can be Improved:</FormLabel>
+          <Textarea placeholder="What can your student improve?"
+            value={peningkatan} onChange={(e) => setPeningkatan(e.target.value)}></Textarea>
         </FormControl>
       </Collapse>
-      <Button type="submit" colorScheme='teal' rightIcon={<CheckIcon />} isLoading={loading} loadingText='Submitting'>Kirim</Button>
+      <Button type="submit" colorScheme='teal' isDisabled={!kelas || !tanggal || !komentar || !nama}
+        rightIcon={<CheckIcon />} isLoading={loading} loadingText='Submitting'>Send</Button>
       <Text mb={4}>{message}</Text>
-      <Button onClick={resetHandler} variant='outline' rightIcon={<EditIcon />} colorScheme='red' isDisabled={loading} >Buat Baru</Button>
+      <Button onClick={resetHandler} variant='outline' rightIcon={<EditIcon />} colorScheme='red' isDisabled={loading} >Create New</Button>
     </form>
   )
 }

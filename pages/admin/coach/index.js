@@ -1,37 +1,31 @@
-import { Button, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
-import axios from "axios";
+import { Button, Center, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { connectToDatabase } from "../../../utils/utils";
 
-export default function ClassReports() {
-  const [loading, setLoading] = useState(true);
-  const [coachDatas, setClassDatas] = useState([]);
+export default function CoachNamesReports({ coachDatas }) {
   const router = useRouter();
-  const { pathname } = router;
-  useEffect(() => {
-    const getDatas = async () => {
-      const { data } = await axios.get(
-        '/api/admin/coach'
-      )
-      setClassDatas(data.result);
-      setLoading(false);
-      return data.result;
-    }
-    getDatas();
-  }, [])
+
   return (
-    <div>
-      {loading
-        ? <Flex justify="center" align="center">
-          <Spinner />
-        </Flex>
-        : <Grid templateColumns='repeat(2, 1fr)' gap={10}>
-          {coachDatas.map((coachData) => (
-            <GridItem key={coachData._id} w='100%' h='10'>
-              <Button onClick={() => router.push(pathname + '/' + coachData.name)}>{coachData.name}</Button>
-            </GridItem>
-          ))}
-        </Grid>}
-    </div>
+    <Grid templateColumns='repeat(2, 1fr)' gap={10}>
+      {coachDatas.length === 0
+        ? <Center>No coaches found</Center>
+        : coachDatas.map((coachData) => (
+          <GridItem key={coachData._id} w='100%' h='10'>
+            <Button onClick={() => router.push('/admin/coach/' + coachData.name)}>{coachData.name}</Button>
+          </GridItem>
+        ))}
+    </Grid>
   )
+}
+
+export async function getServerSideProps() {
+  const client = await connectToDatabase();
+  const db = client.db("reports");
+  const coaches = await db.collection('coaches').find().toArray();
+  client.close();
+  return {
+    props: {
+      coachDatas: JSON.parse(JSON.stringify(coaches)),
+    }
+  }
 }
